@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const cors = require('cors');
 const port = process.env.PORT || 5000
 require('dotenv').config()
@@ -18,7 +18,25 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try {
+        const noteCollection = client.db('toDoList').collection('notes')
 
+        app.post('/notes', async (req, res) => {
+            const notes = req.body;
+            const result = await noteCollection.insertOne(notes)
+            res.send(result)
+        })
+
+        //Get All Tasks added by a specific user
+        app.get('/myTasks', async (req, res) => {
+            const email = req.query.email;
+            //Set the Query
+            const query = {
+                email: email
+            }
+            //Find the data from the collection
+            const result = await noteCollection.find(query).toArray()
+            res.send(result)
+        })
     }
 
     finally {
