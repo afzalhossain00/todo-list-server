@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 const port = process.env.PORT || 5000
 require('dotenv').config()
@@ -35,6 +35,14 @@ async function run() {
             }
             //Find the data from the collection
             const result = await noteCollection.find(query).toArray()
+            res.send(result)
+        })
+
+        //Delete a specific task
+        app.delete('/deletetask/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await noteCollection.deleteOne(query)
             res.send(result)
         })
     }
