@@ -38,6 +38,18 @@ async function run() {
             res.send(result)
         })
 
+        //Get all Completed Task for a Specific User
+        app.get('/completeTasks', async (req, res) => {
+            const email = req.query.email;
+            const query = {
+                email: email,
+                status: 'Completed'
+            }
+            //Find the data from the collection
+            const completedTasks = await noteCollection.find(query).toArray()
+            res.send(completedTasks)
+        })
+
         //Delete a specific task
         app.delete('/deletetask/:id', async (req, res) => {
             const id = req.params.id;
